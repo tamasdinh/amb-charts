@@ -8,41 +8,42 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   loading: () => <div className="bg-white rounded-lg shadow p-6">Loading chart...</div>
 });
 
-const chartData = [
-  {
-    name: 'Energy',
-    data: [2.52, 0.81, 5.60, 3.89]
-  },
-  {
-    name: 'Labor',
-    data: [2.81, 2.12, 7.02, 6.34]
-  },
-  {
-    name: 'Consumables',
-    data: [0.26, 0, 0.26, 0]
-  },
-  {
-    name: 'Cost of Capital',
-    data: [2.54, 1.58, 7.32, 6.19]
-  },
-  {
-    name: 'Real Estate',
-    data: [0.50, 0.18, 1.44, 1.11]
-  },
-  {
-    name: 'Overhead',
-    data: [2.20, 1.19, 5.52, 4.47]
-  }
-];
-
-const totalSlurry = chartData.reduce((sum, item) => sum + item.data[2], 0);
-const totalDry = chartData.reduce((sum, item) => sum + item.data[3], 0);
-const percentDiff = (((totalSlurry - totalDry) / totalSlurry) * 100).toFixed(0);
-const yaxisMax = Math.ceil(Math.max(totalSlurry, totalDry) * 1.25);
-
 export default function OpexChart() {
+
+  const chartData = [
+    {
+      name: 'Energy',
+      data: [2.52, 0.81, 5.60, 3.89]
+    },
+    {
+      name: 'Labor',
+      data: [2.81, 2.12, 7.02, 6.34]
+    },
+    {
+      name: 'Consumables',
+      data: [0.26, 0, 0.26, 0]
+    },
+    {
+      name: 'Cost of Capital',
+      data: [2.54, 1.58, 7.32, 6.19]
+    },
+    {
+      name: 'Real Estate',
+      data: [0.50, 0.18, 1.44, 1.11]
+    },
+    {
+      name: 'Overhead',
+      data: [2.20, 1.19, 5.52, 4.47]
+    }
+  ];
+
+  const totalSlurry = chartData.reduce((sum, item) => sum + item.data[2], 0);
+  const totalDry = chartData.reduce((sum, item) => sum + item.data[3], 0);
+  const percentDiff = (((totalSlurry - totalDry) / totalSlurry) * 100).toFixed(0);
+  const yaxisMax = Math.ceil(Math.max(totalSlurry, totalDry) * 1.3);
+
   // Calculate column totals
-  const totals = chartData[0].data.map((_, colIndex) => 
+  const totals = chartData[0].data.map((_, colIndex) =>
     chartData.reduce((sum, series) => sum + series.data[colIndex], 0)
   );
 
@@ -94,11 +95,11 @@ export default function OpexChart() {
       align: 'left',
       style: {
         fontSize: '14px',
-        color: '#6B7280'
+        color: colors.subtitle
       }
     },
     xaxis: {
-      categories: ['Slurry', 'Dry', 'Slurry', 'Dry'],
+      categories: ['Slurry', 'Dry', 'Slurry (factory)', 'Dry (factory)'],
       group: {
         groups: [
           { title: 'Electrode manufacturing', cols: 2 },
@@ -119,8 +120,8 @@ export default function OpexChart() {
     },
     yaxis: {
       min: 0,
-      max: yaxisMax,
-      tickAmount: 6,
+      max: yaxisMax - (yaxisMax % 5),
+      tickAmount: Math.floor(yaxisMax / 5),
       labels: {
         formatter: (val: number) => '$' + Math.round(val) + '/kWh',
         style: {
@@ -168,26 +169,26 @@ export default function OpexChart() {
     annotations: {
       points: [
         ...totals.map((total, index) => ({
-          x: ['Slurry', 'Dry', 'Slurry', 'Dry'][index],
+          x: ['Slurry', 'Dry', 'Slurry (factory)', 'Dry (factory)'][index],
           y: total,
           marker: { size: 0, strokeWidth: 0 },
           label: {
             text: '$' + total.toFixed(1) + '/kWh',
             position: 'top',
-            offsetY: -12,
+            offsetY: -5,
             textAnchor: 'middle',
             borderColor: 'transparent',
             style: {
               fontSize: '14px',
               fontWeight: 600,
               color: colors.slurryBlack,
-              background: 'transparent'
+              background: '#FFFFFF'
             }
           }
         }))
       ],
       yaxis: [{
-        y: yaxisMax,
+        y: yaxisMax - (yaxisMax % 5),
         borderColor: 'transparent',
         label: {
           text: percentDiff + '% reduction',
@@ -196,7 +197,7 @@ export default function OpexChart() {
           offsetY: -3,
           borderColor: 'transparent',
           style: {
-            background: '#475569',
+            background: colors.annotation,
             color: '#fff',
             padding: {
               left: 10,

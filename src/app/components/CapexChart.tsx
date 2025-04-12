@@ -39,7 +39,7 @@ const chartData = [
 const slurryTotal = chartData.reduce((total, series) => total + series.data[0], 0);
 const dryTotal = chartData.reduce((total, series) => total + series.data[1], 0);
 // Set yaxis max to 125% of the higher total
-const yaxisMax = Math.ceil(Math.max(slurryTotal, dryTotal) * 1.25);
+const yaxisMax = Math.floor(Math.max(slurryTotal, dryTotal) * 1.25);
 
 export default function CapexChart() {
   const slurryTotal = chartData.reduce((total, series) => total + series.data[0], 0);
@@ -87,7 +87,7 @@ export default function CapexChart() {
       align: 'left',
       style: {
         fontSize: '14px',
-        color: '#6B7280'
+        color: colors.subtitle
       }
     },
     xaxis: {
@@ -101,8 +101,8 @@ export default function CapexChart() {
     },
     yaxis: {
       min: 0,
-      max: yaxisMax,
-      tickAmount: 6,
+      max: yaxisMax - (yaxisMax % 5),
+      tickAmount: Math.floor(yaxisMax / 5),
       labels: {
         formatter: function(value) {
           return '$' + Math.round(value) + 'M';
@@ -203,7 +203,7 @@ export default function CapexChart() {
         }
       }],
       yaxis: [{
-        y: yaxisMax,
+        y: yaxisMax - (yaxisMax % 5),
         borderColor: 'transparent',
         label: {
           text: percentDiff + '% reduction',
@@ -212,7 +212,7 @@ export default function CapexChart() {
           offsetY: -3,
           borderColor: 'transparent',
           style: {
-            background: '#475569',
+            background: colors.annotation,
             color: '#fff',
             padding: {
               left: 10,

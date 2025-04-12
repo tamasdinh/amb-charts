@@ -5,5 +5,8 @@ export const colors = {
   ionBlue: '#DBFAFF',
   offBlack: '#181819',
   yellow: '#FCC100',
-  orangeLight: '#FF8C00'
+  orangeLight: '#FF8C00',
+  annotation: '#475569',
+  subtitle: '#6B7280',
+  white: '#FFFFFF',
 } as const;

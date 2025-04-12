@@ -8,23 +8,25 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   loading: () => <div className="bg-white rounded-lg shadow p-6">Loading chart...</div>
 });
 
-interface Props {
-  cellCostReduction: number;
-}
+export default function CellCostChart() {
 
-const chartData = [{
-  name: 'Cell Cost',
-  data: [71.86, 66.91]
-}];
+  const chartData = [{
+    name: 'Cell Cost',
+    data: [71.86, 66.91]
+  }];
 
-export default function CellCostChart({ cellCostReduction }: Props) {
+  const totalSlurry = chartData[0].data[0];
+  const totalDry = chartData[0].data[1];
+  const percentDiff = (((totalSlurry - totalDry) / totalSlurry) * 100).toFixed(0);
+  const yaxisMax = Math.ceil(Math.max(totalSlurry, totalDry) * 1.3);
+
   const chartOptions: ApexOptions = {
-    colors: [colors.ionBlue],
+    colors: [colors.cathodeOrange],
     chart: {
       type: 'bar',
       height: 350,
       toolbar: {
-        show: true
+        show: false
       },
       fontFamily: GeistSans.style.fontFamily
     },
@@ -32,16 +34,13 @@ export default function CellCostChart({ cellCostReduction }: Props) {
       bar: {
         horizontal: false,
         columnWidth: '45%',
-        borderRadius: 6,
-        dataLabels: {
-          position: 'top'
-        }
+        borderRadius: 0,
       },
     },
     states: {
       hover: {
         filter: {
-          type: 'darken',
+          type: 'none',
         }
       }
     },
@@ -59,7 +58,7 @@ export default function CellCostChart({ cellCostReduction }: Props) {
       align: 'left',
       style: {
         fontSize: '14px',
-        color: '#6B7280'
+        color: colors.subtitle
       }
     },
     xaxis: {
@@ -67,23 +66,26 @@ export default function CellCostChart({ cellCostReduction }: Props) {
       labels: {
         style: {
           fontSize: '14px',
+          fontWeight: 600,
           colors: colors.slurryBlack
         }
       }
     },
     yaxis: {
+      min: 0,
+      max: yaxisMax - (yaxisMax % 10),
+      tickAmount: Math.floor(yaxisMax / 10),
       labels: {
-        formatter: function(value) {
+        formatter: function (value) {
           return '$' + value + '/kWh';
         },
         style: {
-          colors: colors.cathodeOrange
+          colors: colors.slurryBlack
         }
       },
       title: {
         text: undefined
       },
-      max: 100
     },
     legend: {
       show: false
@@ -92,35 +94,82 @@ export default function CellCostChart({ cellCostReduction }: Props) {
       opacity: 1
     },
     dataLabels: {
-      enabled: true,
-      formatter: function(val: number) {
-        return '$' + val.toFixed(0) + '/kWh';
-      },
-      offsetY: -20,
-      style: {
-        fontSize: '13px',
-        colors: [colors.slurryBlack],
-        fontWeight: 500
-      }
+      enabled: false
     },
     tooltip: {
       y: {
-        formatter: function(value) {
+        formatter: function (value) {
           return '$' + value + '/kWh';
         }
       },
       theme: 'dark'
     },
     annotations: {
+      points: [
+        {
+          x: 'Slurry',
+          y: totalSlurry,
+          marker: {
+            size: 0,
+            strokeWidth: 0
+          },
+          label: {
+            text: '$' + totalSlurry.toFixed(2) + '/kWh',
+            position: 'top',
+            offsetY: -5,
+            textAnchor: 'middle',
+            borderColor: 'transparent',
+            style: {
+              fontSize: '14px',
+              fontWeight: 600,
+              color: colors.slurryBlack,
+              background: '#FFFFFF',
+              padding: {
+                left: 8,
+                right: 8,
+                top: 4,
+                bottom: 4
+              }
+            }
+          }
+        },
+        {
+          x: 'Dry',
+          y: totalDry,
+          marker: {
+            size: 0,
+            strokeWidth: 0
+          },
+          label: {
+            text: '$' + totalDry.toFixed(2) + '/kWh',
+            position: 'top',
+            offsetY: -5,
+            textAnchor: 'middle',
+            borderColor: 'transparent',
+            style: {
+              fontSize: '14px',
+              fontWeight: 600,
+              color: colors.slurryBlack,
+              background: '#FFFFFF',
+              padding: {
+                left: 8,
+                right: 8,
+                top: 4,
+                bottom: 4
+              }
+            }
+          }
+        }
+      ],
       yaxis: [{
-        y: 85,
-        borderColor: colors.slurryBlack,
+        y: yaxisMax - (yaxisMax % 10),
+        borderColor: 'transparent',
         label: {
-          text: `${cellCostReduction}% reduction`,
-          position: 'left',
+          text: percentDiff + '% reduction',
+          position: 'right',
           borderColor: 'transparent',
           style: {
-            background: colors.slurryBlack,
+            background: colors.annotation,
             color: '#fff',
             padding: {
               left: 10,
@@ -128,8 +177,8 @@ export default function CellCostChart({ cellCostReduction }: Props) {
               top: 5,
               bottom: 5
             },
-            fontSize: '12px',
-            fontWeight: 500
+            fontSize: '14px',
+            fontWeight: 600
           }
         }
       }]
