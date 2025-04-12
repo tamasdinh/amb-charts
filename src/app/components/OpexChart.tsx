@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
 import { colors } from '../styles/colors';
-import { GeistSans } from 'geist/font/sans';
+import { geist } from '../layout';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -48,15 +48,15 @@ export default function OpexChart() {
   );
 
   const chartOptions: ApexOptions = {
-    colors: [colors.slurryBlack, colors.ionBlue, colors.chargeWhite, colors.yellow, colors.orangeLight, colors.cathodeOrange],
+    colors: [colors.graphite, colors.ionBlue, colors.oxideTeal, colors.chromaGlow, colors.signalYellow, colors.cathodeOrange],
     chart: {
       type: 'bar',
-      height: 450,
+      height: 520, // Adjusted for the container's padding
       stacked: true,
       toolbar: {
-        show: false
+        show: true
       },
-      fontFamily: GeistSans.style.fontFamily
+      fontFamily: geist.style.fontFamily
     },
     plotOptions: {
       bar: {
@@ -87,7 +87,7 @@ export default function OpexChart() {
       style: {
         fontSize: '16px',
         fontWeight: 600,
-        color: colors.slurryBlack
+        color: colors.powderBlack
       }
     },
     subtitle: {
@@ -95,11 +95,18 @@ export default function OpexChart() {
       align: 'left',
       style: {
         fontSize: '14px',
-        color: colors.subtitle
+        color: colors.graphite
       }
     },
     xaxis: {
       categories: ['Slurry', 'Dry', 'Slurry (factory)', 'Dry (factory)'],
+      labels: {
+        style: {
+          fontSize: '12px',
+          fontWeight: 500,
+          colors: colors.powderBlack
+        }
+      },
       group: {
         groups: [
           { title: 'Electrode manufacturing', cols: 2 },
@@ -108,7 +115,7 @@ export default function OpexChart() {
         style: {
           fontSize: '14px',
           fontWeight: 600,
-          colors: [colors.slurryBlack]
+          colors: colors.powderBlack
         }
       },
       axisBorder: {
@@ -181,8 +188,8 @@ export default function OpexChart() {
             style: {
               fontSize: '14px',
               fontWeight: 600,
-              color: colors.slurryBlack,
-              background: '#FFFFFF'
+              color: colors.powderBlack,
+              background: colors.cleanWhite
             }
           }
         }))
@@ -194,10 +201,10 @@ export default function OpexChart() {
           text: percentDiff + '% reduction',
           position: 'right',
           offsetX: -10,
-          offsetY: -3,
+          offsetY: -12,
           borderColor: 'transparent',
           style: {
-            background: colors.annotation,
+            background: colors.powderBlack,
             color: '#fff',
             padding: {
               left: 10,
@@ -214,12 +221,13 @@ export default function OpexChart() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="bg-white rounded-lg shadow p-6" style={{ width: '920px', height: '580px' }}>
       <ReactApexChart
         options={chartOptions}
         series={chartData}
         type="bar"
-        height={450}
+        height={520}
+        width="100%"
       />
     </div>
   );

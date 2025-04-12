@@ -1,8 +1,10 @@
-import { GeistSans } from 'geist/font/sans';
+import { Geist } from 'next/font/google';
 import './globals.css'
-import { metadata } from './metadata'
 
-export { metadata }
+export const geist = Geist({
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export default function RootLayout({
   children,
@@ -10,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
+    <html lang="en" className={geist.className}>
       <body>{children}</body>
     </html>
   )

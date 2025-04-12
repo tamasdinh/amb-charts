@@ -1,12 +1,11 @@
 export const colors = {
-  slurryBlack: '#2E2E2E',
-  chargeWhite: '#F1F1EC',
+  powderBlack: '#141414', // was slurryBlack
+  chargeWhite: '#FBFBF8',
   cathodeOrange: '#EF5B00',
   ionBlue: '#DBFAFF',
-  offBlack: '#181819',
-  yellow: '#FCC100',
-  orangeLight: '#FF8C00',
-  annotation: '#475569',
-  subtitle: '#6B7280',
-  white: '#FFFFFF',
+  graphite: '#727177', // was offBlack
+  chromaGlow: '#FFF3CA', // was yellow
+  signalYellow: '#FFC800', // was orangeLight
+  oxideTeal: '#005C68',
+  cleanWhite: '#FFFFFF',
 } as const;

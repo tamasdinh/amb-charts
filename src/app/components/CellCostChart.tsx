@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
 import { colors } from '../styles/colors';
-import { GeistSans } from 'geist/font/sans';
+import { geist } from '../layout';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -24,11 +24,11 @@ export default function CellCostChart() {
     colors: [colors.cathodeOrange],
     chart: {
       type: 'bar',
-      height: 350,
+      height: 520, // Adjusted for the container's padding
       toolbar: {
-        show: false
+        show: true
       },
-      fontFamily: GeistSans.style.fontFamily
+      fontFamily: 'Geist, sans-serif'
     },
     plotOptions: {
       bar: {
@@ -50,7 +50,8 @@ export default function CellCostChart() {
       style: {
         fontSize: '16px',
         fontWeight: 600,
-        color: colors.slurryBlack
+        fontFamily: geist.style.fontFamily,
+        color: colors.powderBlack
       }
     },
     subtitle: {
@@ -58,7 +59,7 @@ export default function CellCostChart() {
       align: 'left',
       style: {
         fontSize: '14px',
-        color: colors.subtitle
+        color: colors.graphite
       }
     },
     xaxis: {
@@ -67,7 +68,7 @@ export default function CellCostChart() {
         style: {
           fontSize: '14px',
           fontWeight: 600,
-          colors: colors.slurryBlack
+          colors: colors.powderBlack
         }
       }
     },
@@ -80,7 +81,7 @@ export default function CellCostChart() {
           return '$' + value + '/kWh';
         },
         style: {
-          colors: colors.slurryBlack
+          colors: colors.powderBlack
         }
       },
       title: {
@@ -114,7 +115,7 @@ export default function CellCostChart() {
             strokeWidth: 0
           },
           label: {
-            text: '$' + totalSlurry.toFixed(2) + '/kWh',
+            text: '$' + totalSlurry.toFixed(1) + '/kWh',
             position: 'top',
             offsetY: -5,
             textAnchor: 'middle',
@@ -122,8 +123,8 @@ export default function CellCostChart() {
             style: {
               fontSize: '14px',
               fontWeight: 600,
-              color: colors.slurryBlack,
-              background: '#FFFFFF',
+              color: colors.powderBlack,
+              background: colors.cleanWhite,
               padding: {
                 left: 8,
                 right: 8,
@@ -141,7 +142,7 @@ export default function CellCostChart() {
             strokeWidth: 0
           },
           label: {
-            text: '$' + totalDry.toFixed(2) + '/kWh',
+            text: '$' + totalDry.toFixed(1) + '/kWh',
             position: 'top',
             offsetY: -5,
             textAnchor: 'middle',
@@ -149,8 +150,8 @@ export default function CellCostChart() {
             style: {
               fontSize: '14px',
               fontWeight: 600,
-              color: colors.slurryBlack,
-              background: '#FFFFFF',
+              color: colors.powderBlack,
+              background: colors.cleanWhite,
               padding: {
                 left: 8,
                 right: 8,
@@ -168,8 +169,10 @@ export default function CellCostChart() {
           text: percentDiff + '% reduction',
           position: 'right',
           borderColor: 'transparent',
+          offsetX: -10,
+          offsetY: -12,
           style: {
-            background: colors.annotation,
+            background: colors.powderBlack,
             color: '#fff',
             padding: {
               left: 10,
@@ -186,12 +189,13 @@ export default function CellCostChart() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="bg-white rounded-lg shadow p-6" style={{ width: '920px', height: '580px' }}>
       <ReactApexChart
         options={chartOptions}
         series={chartData}
         type="bar"
-        height={350}
+        height={520}
+        width="100%"
       />
     </div>
   );

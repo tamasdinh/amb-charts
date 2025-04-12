@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
 import { colors } from '../styles/colors';
-import { GeistSans } from 'geist/font/sans';
+import { geist } from '../layout';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -47,15 +47,15 @@ export default function CapexChart() {
   const percentDiff = ((slurryTotal - dryTotal) / slurryTotal * 100).toFixed(0);
 
   const chartOptions: ApexOptions = {
-    colors: [colors.chargeWhite, colors.yellow, colors.orangeLight, colors.cathodeOrange, colors.ionBlue, colors.slurryBlack],
+    colors: [colors.graphite, colors.chromaGlow, colors.signalYellow, colors.cathodeOrange, colors.ionBlue, colors.oxideTeal],
     chart: {
       type: 'bar',
-      height: 450,
+      height: 520, // Adjusted for the container's padding
       stacked: true,
       toolbar: {
-        show: false
+        show: true
       },
-      fontFamily: GeistSans.style.fontFamily
+      fontFamily: geist.style.fontFamily
     },
     plotOptions: {
       bar: {
@@ -79,7 +79,7 @@ export default function CapexChart() {
       style: {
         fontSize: '16px',
         fontWeight: 600,
-        color: colors.slurryBlack
+        color: colors.powderBlack
       }
     },
     subtitle: {
@@ -87,7 +87,7 @@ export default function CapexChart() {
       align: 'left',
       style: {
         fontSize: '14px',
-        color: colors.subtitle
+        color: colors.graphite
       }
     },
     xaxis: {
@@ -96,6 +96,7 @@ export default function CapexChart() {
         style: {
           fontSize: '14px',
           fontWeight: 600,
+          colors: colors.powderBlack
         }
       }
     },
@@ -105,7 +106,7 @@ export default function CapexChart() {
       tickAmount: Math.floor(yaxisMax / 5),
       labels: {
         formatter: function(value) {
-          return '$' + Math.round(value) + 'M';
+          return '$' + Math.round(value) + 'M/GWh';
         },
         style: {
           fontSize: '12px'
@@ -165,8 +166,8 @@ export default function CapexChart() {
           borderColor: '#FFFFFF',
           style: {
             fontSize: '14px',
-            color: colors.slurryBlack,
-            background: '#FFFFFF',
+            color: colors.powderBlack,
+            background: colors.cleanWhite,
             fontWeight: 600,
             padding: {
               left: 8,
@@ -190,8 +191,8 @@ export default function CapexChart() {
           borderColor: '#FFFFFF',
           style: {
             fontSize: '14px',
-            color: colors.slurryBlack,
-            background: '#FFFFFF',
+            color: colors.powderBlack,
+            background: colors.cleanWhite,
             fontWeight: 600,
             padding: {
               left: 8,
@@ -209,10 +210,10 @@ export default function CapexChart() {
           text: percentDiff + '% reduction',
           position: 'right',
           offsetX: -10,
-          offsetY: -3,
+          offsetY: -12,
           borderColor: 'transparent',
           style: {
-            background: colors.annotation,
+            background: colors.powderBlack,
             color: '#fff',
             padding: {
               left: 10,
@@ -235,12 +236,13 @@ export default function CapexChart() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="bg-white rounded-lg shadow p-6" style={{ width: '920px', height: '580px' }}>
       <ReactApexChart
         options={chartOptions}
         series={chartData}
         type="bar"
-        height={450}
+        height={520}
+        width="100%"
       />
     </div>
   );
